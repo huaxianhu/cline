@@ -316,13 +316,6 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	useEffect(() => {
 		const { messageQueue, setMessageQueue, clineAsk } = chatState
 
-		console.log("[ChatView] Queue processing effect triggered:", {
-			sendingDisabled,
-			queueLength: messageQueue.length,
-			clineAsk,
-			isProcessing: isProcessingQueueRef.current,
-		})
-
 		// Early return if conditions aren't met
 		// Don't process queue if there's an API error (clineAsk === "api_req_failed")
 		// Don't process if already processing (prevents race condition)
@@ -341,16 +334,9 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 
 		// Set processing lock immediately to prevent race conditions
 		isProcessingQueueRef.current = true
-		console.log("[ChatView] Set processing lock to true")
 
 		// Process the first message in the queue
 		const [nextMessage, ...remaining] = messageQueue
-
-		console.log("[ChatView] Processing queued message:", {
-			messageId: nextMessage.id,
-			text: nextMessage.text,
-			remainingInQueue: remaining.length,
-		})
 
 		// Update queue immediately to prevent duplicate processing
 		setMessageQueue(remaining)
@@ -358,9 +344,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		// Process the message asynchronously
 		const processMessage = async () => {
 			try {
-				console.log("[ChatView] Calling handleSendMessage for queued message:", nextMessage.id)
 				await messageHandlers.handleSendMessage(nextMessage.text, nextMessage.images, nextMessage.files, true)
-				console.log("[ChatView] Successfully sent queued message:", nextMessage.id)
 			} catch (error) {
 				console.error("[ChatView] Failed to send queued message:", {
 					messageId: nextMessage.id,
@@ -368,13 +352,11 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				})
 				// On error, re-add the message to the end of the queue for retry
 				setMessageQueue((current) => {
-					console.log("[ChatView] Re-queueing failed message:", nextMessage.id)
 					return [...current, nextMessage]
 				})
 			} finally {
 				// Release the processing lock
 				isProcessingQueueRef.current = false
-				console.log("[ChatView] Released processing lock")
 			}
 		}
 
