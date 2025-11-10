@@ -1,6 +1,6 @@
 import { ClineRulesToggles } from "@shared/cline-rules"
 import fs from "fs/promises"
-import { ApiProviderInfo } from "@/core/api"
+import type { ApiProviderInfo } from "@/core/api"
 import { telemetryService } from "@/services/telemetry"
 import { isNativeToolCallingConfig } from "@/utils/model-utils"
 import {
@@ -22,8 +22,8 @@ export async function parseSlashCommands(
 	globalWorkflowToggles: ClineRulesToggles,
 	ulid: string,
 	focusChainSettings?: { enabled: boolean },
-	enableNativeToolCalls?: boolean,
 	providerInfo?: ApiProviderInfo,
+  enableNativeToolCalls?: boolean,
 ): Promise<{ processedText: string; needsClinerulesFileCheck: boolean }> {
 	const SUPPORTED_DEFAULT_COMMANDS = ["newtask", "smol", "compact", "newrule", "reportbug", "deep-planning", "subagent"]
 
@@ -35,7 +35,7 @@ export async function parseSlashCommands(
 		compact: condenseToolResponse(focusChainSettings),
 		newrule: newRuleToolResponse(),
 		reportbug: reportBugToolResponse(),
-		"deep-planning": deepPlanningToolResponse(focusChainSettings),
+		"deep-planning": deepPlanningToolResponse(focusChainSettings, providerInfo),
 		subagent: subagentToolResponse(),
 	}
 
