@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.38.0
+
+### Minor Changes
+
+- b2a4395: upgrade sap ai-sdk-js packages major version
+
+### Patch Changes
+
+- 1ab4b3c: Fix for SAP provider - OrchestrationClient matches the OrchestrationModuleConfig type and no longer uses the invalid promptTemplating property
+
 ## 3.37.1
 
 - cf8dd1c: Comprehensive changes to better support GPT 5.1 - System prompt, tools, deep-planning, focus chain, etc.
